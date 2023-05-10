@@ -10,7 +10,7 @@ const confirmPasswordEye = document.querySelector("#confirmPasswordEye");
 const toggleBtn = document.querySelector(".toggle_btn");
 const toggleBtnIcon = document.querySelector(".toggle_btn i");
 const dropdownMenu = document.querySelector(".dropdown_menu");
-const fetchUsersUrl = "https://globo-gym.onrender.com/users";
+const fetchUsersUrl = "/users";
 
 toggleBtn.addEventListener("click", () => {
   dropdownMenu.classList.toggle("open");
