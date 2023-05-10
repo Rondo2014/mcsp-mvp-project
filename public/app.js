@@ -1,5 +1,3 @@
-import { createUser } from "./users/user_controller";
-
 const popupContainer = document.getElementById("popup-container");
 const registerButton = document.getElementById("test");
 const closeButton = document.getElementById("close-button");
@@ -8,9 +6,16 @@ const showPassword = document.querySelector(".password-eye");
 const passwordField = document.querySelector("#password");
 const confirmPasswordField = document.querySelector("#confirmPassword");
 const confirmPasswordEye = document.querySelector("#confirmPasswordEye");
+const toggleBtn = document.querySelector(".toggle_btn");
+const toggleBtnIcon = document.querySelector(".toggle_btn i");
+const dropdownMenu = document.querySelector(".dropdown_menu");
 
-let fullName, email, username, password, confirmPassword, dateOfBirth;
+toggleBtn.addEventListener("click", () => {
+  dropdownMenu.classList.toggle("open");
+  const isOpen = dropdownMenu.classList.contains("open");
 
+  toggleBtnIcon.textContent = isOpen ? "close" : "menu";
+});
 registerButton.addEventListener("click", () => {
   popupContainer.style.display = "block";
   popupContainer.classList.add("visible");
@@ -39,21 +44,22 @@ closeButton.addEventListener("click", (e) => {
   popupContainer.style.display = "none";
 });
 
-form.addEventListener("submit", (e) => {
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
-  fullName = document.querySelector("#fullName").value;
-  email = document.querySelector("#email").value;
-  username = document.querySelector("#username").value;
-  password = document.querySelector("#password").value;
-  confirmPassword = document.querySelector("#confirmPassword").value;
-  dateOfBirth = document.querySelector("#dateOfBirth").value;
 
-  const user = createUser(
-    fullName,
-    email,
-    username,
-    password,
-    confirmPassword,
-    dateOfBirth
-  );
+  const formData = new FormData(form);
+  const user = Object.fromEntries(formData.entries());
+
+  try {
+    axios.post("http://localhost:4000/users", user, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    form.reset();
+    popupContainer.style.display = "none";
+  } catch (err) {
+    console.error(err);
+  }
 });
