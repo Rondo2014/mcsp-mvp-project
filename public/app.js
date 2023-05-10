@@ -1,5 +1,6 @@
 const popupContainer = document.getElementById("popup-container");
-const registerButton = document.getElementById("test");
+const registerButton = document.getElementById("signin_signup");
+const registerButtonDropdown = document.getElementById("signin_signup_D");
 const closeButton = document.getElementById("close-button");
 const form = document.querySelector("form");
 const showPassword = document.querySelector(".password-eye");
@@ -17,6 +18,10 @@ toggleBtn.addEventListener("click", () => {
   toggleBtnIcon.textContent = isOpen ? "close" : "menu";
 });
 registerButton.addEventListener("click", () => {
+  popupContainer.style.display = "block";
+  popupContainer.classList.add("visible");
+});
+registerButtonDropdown.addEventListener("click", () => {
   popupContainer.style.display = "block";
   popupContainer.classList.add("visible");
 });
@@ -42,6 +47,7 @@ closeButton.addEventListener("click", (e) => {
   e.preventDefault();
   form.reset();
   popupContainer.style.display = "none";
+  console.log("hello!");
 });
 
 form.addEventListener("submit", async (e) => {
