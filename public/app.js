@@ -57,7 +57,7 @@ form.addEventListener("submit", async (e) => {
   const user = Object.fromEntries(formData.entries());
 
   try {
-    axios.post("http://localhost:4000/users", user, {
+    axios.post(FETCH_URL + "/users", user, {
       headers: {
         "Content-Type": "application/json",
       },
