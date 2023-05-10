@@ -10,6 +10,7 @@ const confirmPasswordEye = document.querySelector("#confirmPasswordEye");
 const toggleBtn = document.querySelector(".toggle_btn");
 const toggleBtnIcon = document.querySelector(".toggle_btn i");
 const dropdownMenu = document.querySelector(".dropdown_menu");
+const fetchUsersUrl = "https://globo-gym.onrender.com/users";
 
 toggleBtn.addEventListener("click", () => {
   dropdownMenu.classList.toggle("open");
@@ -57,7 +58,7 @@ form.addEventListener("submit", async (e) => {
   const user = Object.fromEntries(formData.entries());
 
   try {
-    axios.post("localhost:4000/users", user, {
+    axios.post(fetchUsersUrl, user, {
       headers: {
         "Content-Type": "application/json",
       },
