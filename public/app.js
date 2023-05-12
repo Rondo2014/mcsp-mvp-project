@@ -2,7 +2,8 @@ const popupContainer = document.getElementById("popup-container");
 const registerButton = document.getElementById("signin_signup");
 const registerButtonDropdown = document.getElementById("signin_signup_D");
 const closeButton = document.getElementById("close-button");
-const form = document.querySelector("form");
+const registerForm = document.getElementById("registration-form");
+const signInForm = document.getElementById("signin-form");
 const showPassword = document.querySelector(".password-eye");
 const passwordField = document.querySelector("#password");
 const confirmPasswordField = document.querySelector("#confirmPassword");
@@ -11,20 +12,27 @@ const toggleBtn = document.querySelector(".toggle_btn");
 const toggleBtnIcon = document.querySelector(".toggle_btn i");
 const dropdownMenu = document.querySelector(".dropdown_menu");
 const fetchUsersUrl = "/users";
+const loginUrl = "/users/login";
+const footer = document.getElementById("footer");
 
+//  Navbar toggle
 toggleBtn.addEventListener("click", () => {
   dropdownMenu.classList.toggle("open");
   const isOpen = dropdownMenu.classList.contains("open");
 
   toggleBtnIcon.textContent = isOpen ? "close" : "menu";
 });
+
+// Registration/signup buttons
 registerButton.addEventListener("click", () => {
   popupContainer.style.display = "block";
   popupContainer.classList.add("visible");
+  footer.classList.add("hidden");
 });
 registerButtonDropdown.addEventListener("click", () => {
   popupContainer.style.display = "block";
   popupContainer.classList.add("visible");
+  footer.classList.add("hidden");
 });
 
 showPassword.addEventListener("click", () => {
@@ -46,27 +54,77 @@ confirmPasswordEye.addEventListener("click", () => {
 });
 closeButton.addEventListener("click", (e) => {
   e.preventDefault();
-  form.reset();
+  registerForm.reset();
+  signInForm.reset();
   popupContainer.style.display = "none";
-  console.log("hello!");
+  footer.classList.remove("hidden");
 });
 
-form.addEventListener("submit", async (e) => {
+// Registration form submission
+registerForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const formData = new FormData(form);
+  const formData = new FormData(registerForm);
   const user = Object.fromEntries(formData.entries());
-
   try {
-    axios.post(fetchUsersUrl, user, {
+    axios
+      .post(fetchUsersUrl, user, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .catch((err) => {
+        console.log(err.response);
+        if (err.response && err.response.status === 400) {
+          alert(err.response.data);
+        }
+        popupContainer.style.display = "block";
+        popupContainer.classList.add("visible");
+        footer.classList.add("hidden");
+      });
+
+    registerForm.reset();
+  } catch (err) {
+    console.log(err.response);
+    if (err.response && err.response.status === 400) {
+      alert(err.response.data);
+    } else {
+      console.error(err);
+    }
+  }
+  popupContainer.style.display = "none";
+  footer.classList.remove("hidden");
+});
+// Signin form submission
+signInForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const formData = new FormData(signInForm);
+  const user = Object.fromEntries(formData.entries());
+  console.log(user);
+  try {
+    axios.post(loginUrl, user, {
       headers: {
         "Content-Type": "application/json",
       },
     });
-
-    form.reset();
-    popupContainer.style.display = "none";
+    signInForm.reset();
   } catch (err) {
-    console.error(err);
+    console.log(err);
   }
+  popupContainer.style.display = "none";
+  footer.classList.remove("hidden");
 });
+
+// // Footer scroller
+// let scrollPosition = window.pageYOffset;
+
+// window.addEventListener("scroll", () => {
+//   const currentScrollPosition = window.pageYOffset;
+
+//   if (currentScrollPosition > scrollPosition && currentScrollPosition > 100) {
+//     footer.classList.remove("hidden");
+//   } else {
+//     footer.classList.add("hidden");
+//   }
+//   scrollPosition = currentScrollPosition;
+// });
