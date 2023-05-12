@@ -161,8 +161,7 @@ export const loginRequest = async (req, res, next) => {
     const secretKey = "your-secret-key";
     const token = jwt.sign({ username: user.username }, secretKey);
     console.log(token);
-
-    return res.json({ token });
+    return res.status(202).json({ token, message: "Login Success!" });
   } catch (err) {
     next(err);
   }

@@ -61,6 +61,76 @@
           </li>
         </div>
       </header>
+      <div class="body-container">
+        <div class="demo-card-wide mdl-card mdl-shadow--2dp">
+          <div class="mdl-card__title">
+            <h2 class="mdl-card__title-text">Hello user</h2>
+          </div>
+          <div class="mdl-card__supporting-text">
+            Here at Globo Gym, we're better than you and we know it. Join our
+            elite group of warrior athletes by signing up today.
+          </div>
+          <div class="mdl-card__actions mdl-card--border">
+            <a
+              class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"
+            >
+              Get Started
+            </a>
+          </div>
+          <div class="mdl-card__menu">
+            <button
+              class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect"
+            >
+              <i class="material-icons">share</i>
+            </button>
+          </div>
+        </div>
+        <ul class="demo-list-three mdl-list">
+          <li class="mdl-list__item mdl-list__item--three-line">
+            <span class="mdl-list__item-primary-content">
+              <i class="material-icons mdl-list__item-avatar">person</i>
+              <span>Ronnie Miller</span>
+              <span class="mdl-list__item-text-body">
+                World renowned trainer and legendary cricket player. Maybe
+                someday you can make it to his level.
+              </span>
+            </span>
+            <span class="mdl-list__item-secondary-content">
+              <a class="mdl-list__item-secondary-action" href="#"
+                ><i class="material-icons">star</i></a
+              >
+            </span>
+          </li>
+          <li class="mdl-list__item mdl-list__item--three-line">
+            <span class="mdl-list__item-primary-content">
+              <i class="material-icons mdl-list__item-avatar">person</i>
+              <span>Samson Brown</span>
+              <span class="mdl-list__item-text-body">
+                Samson is a terrible trainer but a reality specialist. You might
+                hurt your back but you can close out on a home for prices you
+                never thought possible.
+              </span>
+            </span>
+            <span class="mdl-list__item-secondary-content">
+              <a class="mdl-list__item-secondary-action" href="#"
+                ><i class="material-icons">star</i></a
+              >
+            </span>
+          </li>
+          <li class="mdl-list__item mdl-list__item--three-line">
+            <span class="mdl-list__item-primary-content">
+              <i class="material-icons mdl-list__item-avatar">person</i>
+              <span>Will Swinson</span>
+              <span class="mdl-list__item-text-body"> eh. </span>
+            </span>
+            <span class="mdl-list__item-secondary-content">
+              <a class="mdl-list__item-secondary-action" href="#"
+                ><i class="material-icons">star</i></a
+              >
+            </span>
+          </li>
+        </ul>
+      </div>
       <div id="popup-container">
         <div class="reg_container">
           <div class="title">Registration/Sign-in</div>
@@ -224,7 +294,7 @@
                 >
               </div>
               <button
-                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent sign-in-button"
               >
                 Sign In
               </button>
@@ -239,6 +309,27 @@
           </button>
         </div>
       </div>
+      <dialog class="mdl-dialog logout-dialog">
+        <div class="mdl-dialog__content">
+          <p>Are you sure you would like to logout?</p>
+        </div>
+        <div class="mdl-dialog__actions">
+          <button type="button" class="mdl-button mdl-logout-button">
+            Agree
+          </button>
+          <button type="button" class="mdl-button close">Disagree</button>
+        </div>
+      </dialog>
+      <dialog class="mdl-dialog sign-in-dialog">
+        <h4 class="mdl-dialog__title">Sign-in Success!</h4>
+        <div class="mdl-dialog__content">
+          <p>Welcome to Globo Gym</p>
+        </div>
+        <div class="mdl-dialog__actions">
+          <button type="button" class="mdl-button sign-in-close">close</button>
+          <!-- <button type="button" class="mdl-button close">Disagree</button> -->
+        </div>
+      </dialog>
     </div>
     <footer id="footer" class="mdl-mega-footer footer">
       <div class="mdl-mega-footer__middle-section">

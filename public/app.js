@@ -14,7 +14,36 @@ const dropdownMenu = document.querySelector(".dropdown_menu");
 const fetchUsersUrl = "/users";
 const loginUrl = "/users/login";
 const footer = document.getElementById("footer");
+const signInButton = document.querySelector(".sign-in-button");
+const signInDialog = document.querySelector(".sign-in-dialog");
+const welcomeCard = document.querySelector(".mdl-card");
+const welcomeButton = welcomeCard.querySelector(".mdl-button");
+const logOutDialog = document.querySelector(".logout-dialog");
 
+isLoggedIn();
+console.log(isLoggedIn());
+
+// Login logic
+function isLoggedIn() {
+  const token = localStorage.getItem("token");
+  return token !== null;
+}
+function handleLogout() {
+  logOutDialog.close();
+  localStorage.removeItem("token");
+  updateDOMOnLogin();
+}
+function updateDOMOnLogin() {
+  if (isLoggedIn()) {
+    registerButton.textContent = "Logout";
+  } else {
+    registerButton.textContent = "Login/Signup";
+  }
+}
+function handleSignIn() {
+  signInDialog.close();
+  updateDOMOnLogin();
+}
 //  Navbar toggle
 toggleBtn.addEventListener("click", () => {
   dropdownMenu.classList.toggle("open");
@@ -25,16 +54,32 @@ toggleBtn.addEventListener("click", () => {
 
 // Registration/signup buttons
 registerButton.addEventListener("click", () => {
-  popupContainer.style.display = "block";
-  popupContainer.classList.add("visible");
-  footer.classList.add("hidden");
+  if (isLoggedIn()) {
+    console.log(isLoggedIn());
+    logOutDialog
+      .querySelector(".mdl-logout-button")
+      .addEventListener("click", handleLogout);
+    logOutDialog.showModal();
+  } else {
+    popupContainer.style.display = "block";
+    popupContainer.classList.add("visible");
+    footer.classList.add("hidden");
+    welcomeCard.classList.add("hidden");
+  }
 });
+
 registerButtonDropdown.addEventListener("click", () => {
   popupContainer.style.display = "block";
   popupContainer.classList.add("visible");
   footer.classList.add("hidden");
+  welcomeCard.classList.add("hidden");
 });
-
+welcomeButton.addEventListener("click", () => {
+  popupContainer.style.display = "block";
+  popupContainer.classList.add("visible");
+  footer.classList.add("hidden");
+  welcomeCard.classList.add("hidden");
+});
 showPassword.addEventListener("click", () => {
   const type =
     passwordField.getAttribute("type") === "password" ? "text" : "password";
@@ -58,6 +103,7 @@ closeButton.addEventListener("click", (e) => {
   signInForm.reset();
   popupContainer.style.display = "none";
   footer.classList.remove("hidden");
+  welcomeCard.classList.remove("hidden");
 });
 
 // Registration form submission
@@ -102,17 +148,21 @@ signInForm.addEventListener("submit", async (e) => {
   const user = Object.fromEntries(formData.entries());
   console.log(user);
   try {
-    axios.post(loginUrl, user, {
-      headers: {
-        "Content-Type": "application/json",
-      },
+    await axios.post(loginUrl, user).then((response) => {
+      // console.log(response.data.token);
+      localStorage.setItem("token", response.data.token);
     });
+
+    popupContainer.style.display = "none";
+    footer.classList.remove("hidden");
     signInForm.reset();
+    signInDialog.showModal();
+    signInDialog
+      .querySelector(".mdl-button")
+      .addEventListener("click", handleSignIn);
   } catch (err) {
     console.log(err);
   }
-  popupContainer.style.display = "none";
-  footer.classList.remove("hidden");
 });
 
 // // Footer scroller
