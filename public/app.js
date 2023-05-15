@@ -22,6 +22,7 @@ const logOutDialog = document.querySelector(".logout-dialog");
 
 isLoggedIn();
 console.log(isLoggedIn());
+updateDOMOnLogin();
 
 // Login logic
 function isLoggedIn() {
@@ -113,21 +114,14 @@ registerForm.addEventListener("submit", async (e) => {
   const formData = new FormData(registerForm);
   const user = Object.fromEntries(formData.entries());
   try {
-    axios
-      .post(fetchUsersUrl, user, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .catch((err) => {
-        console.log(err.response);
-        if (err.response && err.response.status === 400) {
-          alert(err.response.data);
-        }
-        popupContainer.style.display = "block";
-        popupContainer.classList.add("visible");
-        footer.classList.add("hidden");
-      });
+    axios.post(fetchUsersUrl, user).catch((err) => {
+      if (err.response && err.response.status === 400) {
+        alert(err.response.data);
+      }
+      popupContainer.style.display = "block";
+      popupContainer.classList.add("visible");
+      footer.classList.add("hidden");
+    });
 
     registerForm.reset();
   } catch (err) {

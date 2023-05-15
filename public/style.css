@@ -23,7 +23,7 @@ a {
   font-size: 1rem;
 }
 a:hover {
-  color: purple !important;
+  color: rgb(46, 24, 46) !important;
 }
 /* HEADER */
 header {
@@ -118,9 +118,24 @@ header {
 
 .mdl-dialog {
   position: absolute;
-  top: 50%;
+  top: 30%;
   left: 50%;
   transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: rgb(125, 24, 125);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgb(125, 24, 125) !important;
+}
+.mdl-dialog__content {
+  color: gray !important;
+}
+.sign-in-close {
+  color: rgb(125, 24, 125) !important;
+  background-color: rgb(1, 1, 1) !important;
+}
+.sign-in-close:hover {
+  scale: 1.05;
+  background-color: grey;
 }
 
 .mdl-list {
@@ -137,8 +152,16 @@ header {
   margin-left: 15px;
   margin-right: 60px;
   width: 45%;
-  background-color: rgba(0, 0, 0, 0.39);
+  background-color: rgba(0, 0, 0, 0.577) !important;
   backdrop-filter: blur(15px);
+}
+.mdl-card h2 {
+  color: rgb(125, 24, 125);
+  text-shadow: 0.5px 0.5px 0 #000, 0.5px 0.5px 0 #000, 0.5px 0.5px 0 #000,
+    0.5px 0.5px 0 #000;
+}
+.mdl-card__supporting-text {
+  color: rgba(153, 94, 230, 0.618) !important;
 }
 
 @media (max-width: 992px) {
@@ -147,7 +170,9 @@ header {
   .mdl-list {
     display: none !important;
   }
-
+  .mdl-card {
+    top: 40% !important;
+  }
   .navbar .toggle_btn {
     display: block;
   }
