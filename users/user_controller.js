@@ -72,16 +72,19 @@ export const getUser = async (req, res, next) => {
 };
 
 export const deleteUser = async (req, res, next) => {
-  const index = Number(req.params.id);
-
-  if (isNaN(index) || index < 0) {
-    res.status(400).send("invalid index");
-    return;
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    res.status(401).send("Invalid token");
   }
+  const token = authHeader.substring(7);
   try {
+    const decoded = jwt.verify(token, "super-secret-key");
+    console.log(decoded);
+    const userId = decoded.userId;
+    console.log(userId);
     const user = await pool.query(
       "DELETE FROM users WHERE id =$1 RETURNING *",
-      [index]
+      [userId]
     );
     if (user.rows.length === 0 || user.rows.length === undefined) {
       res.status(400).send("Not found");
@@ -116,7 +119,7 @@ export const updateUser = async (req, res, next) => {
     const userToUpdate = existingUser.rows[0];
     const mergedUser = Object.assign({}, userToUpdate, updatedUser);
     const result = await pool.query(
-      "UPDATE users SET name =$1, date_of_birth =$2, gender =$3, email =$4, trainer =$5, primary_gym =$6 RETURNING *",
+      "UPDATE users SET name =$1, date_of_birth =$2, gender =$3, email =$4, trainer =$5, primary_gym =$6 WHERE id =$7 RETURNING *",
       [
         mergedUser.name,
         moment(mergedUser.date_of_birth).format("YYYY-MM-DD"),
@@ -124,6 +127,7 @@ export const updateUser = async (req, res, next) => {
         mergedUser.email,
         mergedUser.trainer,
         mergedUser.primary_gym,
+        userId,
       ]
     );
     res
@@ -143,20 +147,20 @@ export const loginRequest = async (req, res, next) => {
       username,
     ]);
     if (user.rows.length === 0) {
-      return res.status(401).send("Invalid username or password");
+      res.status(401).send("Invalid username or password");
     }
 
     const isValid = bcrypt.compareSync(password, user.rows[0].password);
 
     if (!isValid) {
-      return res.status(401).send("Invalid username or password");
+      res.status(401).send("Invalid username or password");
     }
 
     const secretKey = "super-secret-key";
     const userId = user.rows[0].id;
     const token = jwt.sign({ userId }, secretKey);
     console.log(token);
-    return res.status(202).json({ token, message: "Login Success!" });
+    res.status(202).json({ token, message: "Login Success!" });
   } catch (err) {
     next(err);
   }

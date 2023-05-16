@@ -17,6 +17,7 @@ const fetchUsersUrl = "/users";
 const getUsersByID = "/users/:id";
 const loginUrl = "/users/login";
 const passwordUrl = "/users/password";
+const deleteUrl = "users/delete";
 const footer = document.getElementById("footer");
 const signInButton = document.querySelector(".sign-in-button");
 const signInDialog = document.querySelector(".sign-in-dialog");
@@ -43,6 +44,13 @@ const editButtonDialog = document.querySelector(".edit-button-dialog");
 const editButtonDialogButton = document.querySelector(".edit-password-button");
 const profileSaveDialog = document.querySelector(".profile-save-dialog");
 const profileSaveClose = document.querySelector(".profile-save-close");
+const logOutDisagree = document.querySelector(".mdl-disagree-button");
+const signInError = document.querySelector(".sign-in-error-dialog");
+const signInErrorClose = document.querySelector(".sign-in-error-close");
+const deleteButton = document.querySelector(".delete-button");
+const deleteDialog = document.querySelector(".delete-dialog");
+const deleteAgree = document.querySelector(".mdl-delete-button");
+const deleteDisagree = document.querySelector("#delete-disagree-button");
 
 isLoggedIn();
 console.log(isLoggedIn());
@@ -53,12 +61,14 @@ function isLoggedIn() {
   const token = localStorage.getItem("token");
   return token !== null;
 }
+
 function handleLogout() {
   logOutDialog.close();
   localStorage.removeItem("token");
   updateDOMOnLogin();
   location.reload();
 }
+
 function updateDOMOnLogin() {
   if (isLoggedIn()) {
     registerButton.textContent = "Logout";
@@ -67,14 +77,17 @@ function updateDOMOnLogin() {
     registerButton.textContent = "Login/Signup";
   }
 }
+
 function updateProfile() {
   editButtonDialog.close();
   editButton.textContent = "save";
   profileDOBInput.type = "date";
+  deleteButton.classList.remove("hidden");
   profileInput.forEach((input) => {
     input.disabled = false;
   });
 }
+
 function handleSignIn() {
   signInDialog.close();
   updateDOMOnLogin();
@@ -89,7 +102,7 @@ toggleBtn.addEventListener("click", () => {
 });
 
 // Registration/signup buttons
-registerButton.addEventListener("click", () => {
+registerButton.onclick = () => {
   if (isLoggedIn()) {
     console.log(isLoggedIn());
     logOutDialog
@@ -102,29 +115,32 @@ registerButton.addEventListener("click", () => {
     footer.classList.add("hidden");
     welcomeCard.classList.add("hidden");
   }
-});
+};
 
-registerButtonDropdown.addEventListener("click", () => {
+registerButtonDropdown.onclick = () => {
   popupContainer.style.display = "block";
   popupContainer.classList.add("visible");
   footer.classList.add("hidden");
   welcomeCard.classList.add("hidden");
-});
-welcomeButton.addEventListener("click", () => {
+  dropdownMenu.classList.toggle("open");
+};
+
+welcomeButton.onclick = () => {
   popupContainer.style.display = "block";
   popupContainer.classList.add("visible");
   footer.classList.add("hidden");
   welcomeCard.classList.add("hidden");
-});
-showPassword.addEventListener("click", () => {
+};
+
+showPassword.onclick = () => {
   const type =
     passwordField.getAttribute("type") === "password" ? "text" : "password";
   passwordField.setAttribute("type", type);
   showPassword.textContent =
     type === "password" ? "visibility" : "visibility_off";
-});
+};
 
-confirmPasswordEye.addEventListener("click", () => {
+confirmPasswordEye.onclick = () => {
   const type =
     confirmPasswordField.getAttribute("type") === "password"
       ? "text"
@@ -132,8 +148,9 @@ confirmPasswordEye.addEventListener("click", () => {
   confirmPasswordField.setAttribute("type", type);
   confirmPasswordEye.textContent =
     type === "password" ? "visibility" : "visibility_off";
-});
-signInPasswordEye.addEventListener("click", () => {
+};
+
+signInPasswordEye.onclick = () => {
   const type =
     signInPasswordField.getAttribute("type") === "password"
       ? "text"
@@ -141,18 +158,49 @@ signInPasswordEye.addEventListener("click", () => {
   signInPasswordField.setAttribute("type", type);
   signInPasswordEye.textContent =
     type === "password" ? "visibility" : "visibility_off";
-});
-closeButton.addEventListener("click", (e) => {
+};
+
+closeButton.onclick = (e) => {
   e.preventDefault();
   registerForm.reset();
   signInForm.reset();
   popupContainer.style.display = "none";
   footer.classList.remove("hidden");
   welcomeCard.classList.remove("hidden");
-});
+};
+
+logOutDisagree.onclick = () => {
+  logOutDialog.close();
+};
+
 profileSaveClose.onclick = () => {
   location.reload();
 };
+
+signInErrorClose.onclick = () => {
+  signInError.close();
+};
+
+deleteButton.onclick = () => {
+  deleteDialog.showModal();
+  deleteDisagree.onclick = () => {
+    deleteDialog.close();
+  };
+};
+
+deleteAgree.onclick = () => {
+  const token = localStorage.getItem("token");
+  try {
+    const res = axios.delete(deleteUrl, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    deleteDialog.close();
+    handleLogout();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 // Registration form submission
 registerForm.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -182,6 +230,7 @@ registerForm.addEventListener("submit", async (e) => {
   popupContainer.style.display = "none";
   footer.classList.remove("hidden");
 });
+
 // Signin form submission
 signInForm.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -189,23 +238,23 @@ signInForm.addEventListener("submit", async (e) => {
   const user = Object.fromEntries(formData.entries());
   console.log(user);
   try {
-    await axios.post(loginUrl, user).then((response) => {
-      // console.log(response.data.token);
-      localStorage.setItem("token", response.data.token);
-    });
-
-    popupContainer.style.display = "none";
-    footer.classList.remove("hidden");
-    signInForm.reset();
-    signInDialog.showModal();
-    signInDialog
-      .querySelector(".mdl-button")
-      .addEventListener("click", handleSignIn);
+    const res = await axios.post(loginUrl, user);
+    if (res.status === 202) {
+      localStorage.setItem("token", res.data.token);
+      popupContainer.style.display = "none";
+      footer.classList.remove("hidden");
+      signInForm.reset();
+      signInDialog.showModal();
+      signInDialog
+        .querySelector(".mdl-button")
+        .addEventListener("click", handleSignIn);
+    }
   } catch (err) {
-    console.log(err);
+    signInError.showModal();
   }
 });
 
+// Profile page with information request
 profile.onclick = async () => {
   if (isLoggedIn()) {
     try {
@@ -295,10 +344,9 @@ editButtonDialogButton.onclick = async (e) => {
     if (res.status === 202) {
       console.log("Success!");
       updateProfile();
-    } else {
-      console.log(res.data);
     }
   } catch (err) {
     console.log(err);
+    signInError.showModal();
   }
 };

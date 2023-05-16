@@ -1,3 +1,29 @@
+@keyframes fade-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px) scale(1);
+  }
+}
+@keyframes fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px) scale(1);
+  }
+}
+.fade-down {
+  animation: fade-down 0.5s ease-in;
+}
+.fade-up {
+  animation: fade-up 0.5s ease-in;
+}
 * {
   margin: 0;
   padding: 0;
@@ -9,7 +35,7 @@ body {
   height: 100vh;
   /* justify-content: center;
   align-items: center; */
-  background-image: url(https://wallpaperaccess.com/full/1986686.jpg);
+  background-image: url(https://cdn.thespaces.com/wp-content/uploads/2020/01/Gymshark-hero-crop.jpg);
   background-repeat: no-repeat;
   background-size: cover;
   background-color: black;
@@ -24,7 +50,10 @@ a {
   font-size: 1rem;
 }
 a:hover {
-  color: rgb(46, 24, 46) !important;
+  color: rgb(234, 18, 234) !important;
+}
+h3 {
+  color: rgb(125, 24, 125);
 }
 .avatar img {
   border-radius: 50%;
@@ -41,7 +70,7 @@ a:hover {
   cursor: pointer;
 }
 .profile:hover {
-  color: rgb(46, 24, 46) !important;
+  color: rgb(234, 18, 234) !important;
 }
 .profile-container {
   display: flex;
@@ -95,6 +124,7 @@ header {
   align-items: center;
   justify-content: space-between;
   background-color: rgba(0, 0, 0, 0.532);
+  backdrop-filter: blur(15px);
   border-radius: 20px;
 }
 .navbar .links {
@@ -148,6 +178,7 @@ header {
   border-radius: 10px;
   overflow: hidden;
   transition: height 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 999;
 }
 .dropdown_menu.open {
   height: 240px;
@@ -184,11 +215,18 @@ header {
 .mdl-dialog__content {
   color: gray !important;
 }
-.sign-in-close {
+
+.mdl-button {
   color: rgb(125, 24, 125) !important;
   background-color: rgb(1, 1, 1) !important;
+  border-radius: 10px !important;
 }
-.sign-in-close:hover {
+.delete-button {
+  margin-top: 5px !important;
+  background-color: rgb(125, 24, 125) !important;
+  color: black !important;
+}
+.mdl-button:hover {
   scale: 1.05;
   background-color: grey;
 }
@@ -208,6 +246,12 @@ header {
   border: 1px solid rgb(125, 24, 125);
   border-radius: 15px !important;
 }
+.mdl-list span {
+  color: rgb(167, 109, 167);
+}
+.mdl-list__item-text-body {
+  color: white !important;
+}
 
 .mdl-card {
   margin-left: 15px;
@@ -215,7 +259,6 @@ header {
   width: 45%;
   background-color: rgba(0, 0, 0, 0.577) !important;
   backdrop-filter: blur(15px);
-  z-index: -1 !important;
   border: 1px solid rgb(125, 24, 125);
   border-radius: 15px !important;
 }
@@ -296,6 +339,7 @@ footer {
   justify-content: flex-start;
   right: 30%;
   overflow-y: auto;
+  color: white;
 }
 .forms-container {
   display: flex;

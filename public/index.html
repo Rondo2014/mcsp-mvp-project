@@ -35,15 +35,17 @@
   <body>
     <div class="content-wrapper">
       <header>
-        <div class="navbar">
+        <div class="navbar fade-down">
           <div class="logo">
             <img src="pngaaa.com-4630430.png" alt="Logo" />
           </div>
           <ul class="links">
             <li><a href="index.html">Home</a></li>
-            <li><a href="locations">Locations</a></li>
             <li><a href="trainers">Trainers</a></li>
             <li><p class="profile">Profile</p></li>
+            <li>
+              <a href="https://real-realty.onrender.com/">Homes nearby</a>
+            </li>
           </ul>
           <a href="#" class="action_btn" id="signin_signup">Login/Signup</a>
           <div class="toggle_btn">
@@ -53,16 +55,16 @@
 
         <div class="dropdown_menu">
           <li><a href="index.html">Home</a></li>
-          <li><a href="locations">Locations</a></li>
           <li><a href="trainers">Trainers</a></li>
           <li><p class="profile">Profile</p></li>
+          <li><a href="https://real-realty.onrender.com/">Homes nearby</a></li>
           <li>
             <a href="#" class="action_btn" id="signin_signup_D">Login/Signup</a>
           </li>
         </div>
       </header>
       <div class="body-container">
-        <div class="demo-card-wide mdl-card mdl-shadow--2dp">
+        <div class="demo-card-wide mdl-card mdl-shadow--2dp fade-down">
           <div class="mdl-card__title">
             <h2 class="mdl-card__title-text">Your future starts here</h2>
           </div>
@@ -85,7 +87,10 @@
             </button>
           </div>
         </div>
-        <ul class="demo-list-three mdl-list">
+        <ul class="demo-list-three mdl-list fade-up">
+          <div class="team mdl-list__item">
+            <h3>Meet The Globo Team</h3>
+          </div>
           <li class="mdl-list__item mdl-list__item--three-line">
             <span class="mdl-list__item-primary-content">
               <i class="material-icons mdl-list__item-avatar">person</i>
@@ -93,6 +98,22 @@
               <span class="mdl-list__item-text-body">
                 World renowned trainer and legendary cricket player. Maybe
                 someday you can make it to his level.
+              </span>
+            </span>
+            <span class="mdl-list__item-secondary-content">
+              <a class="mdl-list__item-secondary-action" href="#"
+                ><i class="material-icons">star</i></a
+              >
+            </span>
+          </li>
+          <li class="mdl-list__item mdl-list__item--three-line">
+            <span class="mdl-list__item-primary-content">
+              <i class="material-icons mdl-list__item-avatar">person</i>
+              <span>Joseph Carmeli</span>
+              <span class="mdl-list__item-text-body">
+                Great at telling you what you're doing wrong, not so good at
+                telling you how to do it right. If you want to feel bad about
+                yourself without progressing, you've got your guy!
               </span>
             </span>
             <span class="mdl-list__item-secondary-content">
@@ -132,19 +153,26 @@
         </ul>
       </div>
       <div id="profile" class="profile-container hidden">
-        <div class="avatar">
+        <div class="avatar fade-down">
           <img
             src="https://us.123rf.com/450wm/tanyadanuta/tanyadanuta1910/tanyadanuta191000003/148019275-hand-drawn-modern-man-avatar-profile-icon-or-portrait-icon-user-flat-avatar-icon-sign-profile.jpg?ver=6"
             alt=""
           />
         </div>
-        <div class="profile-content">
+        <div class="profile-content fade-up">
           <button
             id="profile-edit-button"
             type="button"
             class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent edit-button"
           >
             edit
+          </button>
+          <button
+            id="profile-delete-button"
+            type="button"
+            class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent delete-button hidden"
+          >
+            delete account
           </button>
           <form class="profile-details">
             <div
@@ -286,7 +314,7 @@
       <div id="popup-container">
         <div class="reg_container">
           <div class="title">Registration/Sign-in</div>
-          <div class="forms-container">
+          <div class="forms-container fade-down">
             <form
               id="registration-form"
               class="form registration-form"
@@ -472,7 +500,9 @@
           <button type="button" class="mdl-button mdl-logout-button">
             Agree
           </button>
-          <button type="button" class="mdl-button close">Disagree</button>
+          <button type="button" class="mdl-button mdl-disagree-button">
+            Disagree
+          </button>
         </div>
       </dialog>
       <dialog class="mdl-dialog sign-in-dialog">
@@ -517,8 +547,33 @@
           </button>
         </div>
       </dialog>
+      <dialog class="mdl-dialog sign-in-error-dialog">
+        <h4 class="mdl-dialog__title">Incorrect username or password</h4>
+        <div class="mdl-dialog__actions">
+          <button type="button" class="mdl-button sign-in-error-close">
+            close
+          </button>
+        </div>
+      </dialog>
     </div>
-    <footer id="footer" class="mdl-mega-footer footer">
+    <dialog class="mdl-dialog delete-dialog">
+      <div class="mdl-dialog__content">
+        <p>Are you sure you would like to delete your account?</p>
+      </div>
+      <div class="mdl-dialog__actions">
+        <button type="button" class="mdl-button mdl-delete-button">
+          Agree
+        </button>
+        <button
+          id="delete-disagree-button"
+          type="button"
+          class="mdl-button mdl-delete-disagree-button"
+        >
+          Disagree
+        </button>
+      </div>
+    </dialog>
+    <footer id="footer" class="mdl-mega-footer footer fade-up">
       <div class="mdl-mega-footer__middle-section">
         <div class="mdl-mega-footer__drop-down-section">
           <input

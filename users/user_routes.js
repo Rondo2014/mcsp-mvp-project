@@ -12,7 +12,8 @@ import {
 const router = express.Router();
 
 router.route("/").get(getAllUsers).post(createUser).patch(updateUser);
-router.route("/:id").get(getUser).delete(deleteUser);
+router.route("/delete").delete(deleteUser);
+router.route("/:id").get(getUser);
 router.post("/login", loginRequest);
 router.post("/password", passwordRequest);
 
