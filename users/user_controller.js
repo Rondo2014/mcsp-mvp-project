@@ -48,20 +48,25 @@ export const createUser = async (req, res, next) => {
 };
 
 export const getUser = async (req, res, next) => {
-  const index = Number(req.params.id);
-
-  if (isNaN(index) || index < 0) {
-    res.status(400).send("Invalid index");
-    return;
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    res.status(401).send("Invalid token");
   }
+  const token = authHeader.substring(7);
   try {
-    const user = await pool.query(`SELECT * FROM users WHERE id =$1`, [index]);
+    const decoded = jwt.verify(token, "super-secret-key");
+    console.log(decoded);
+    const userId = decoded.userId;
+    console.log(userId);
+
+    const user = await pool.query(`SELECT * FROM users WHERE id =$1`, [userId]);
     if (user.rows.length === 0 || user.rows.length === undefined) {
       res.status(404).send("Not found");
       return;
     }
     res.setHeader("Content-Type", "application/json").send(user.rows[0]);
   } catch (err) {
+    res.status(401).send("Invalid token");
     next(err);
   }
 };
@@ -89,43 +94,28 @@ export const deleteUser = async (req, res, next) => {
 };
 
 export const updateUser = async (req, res, next) => {
-  const index = Number(req.params.id);
-  const updatedUser = req.body;
-  const existingUser = await pool.query(
-    "SELECT * FROM users WHERE username =$1 OR email =$2",
-    [updatedUser.username, updatedUser.email]
-  );
-  if (existingUser.rows.length > 0) {
-    res.status(400).send("Username or email already exists");
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    res.status(401).send("Invalid token");
     return;
   }
-  console.log(updatedUser);
-  if (isNaN(index) || index < 0) {
-    res.status(400).send("invalid index");
-    return;
-  }
-  const keys = [
-    "name",
-    "date_of_birth",
-    "gender",
-    "email",
-    "trainer",
-    "primary_gym",
-  ];
-  const hasKeys = Object.keys(updatedUser).some((key) => {
-    return keys.includes(key);
-  });
-  if (!hasKeys) {
-    res.status(400).send("invalid user data");
-    return;
-  }
+  const token = authHeader.substring(7);
   try {
-    const user = await pool.query("SELECT * FROM users WHERE id =$1", [index]);
-    if (user.rows.length === 0 || !user.rows[0]) {
-      res.status(404).send("Not found");
+    const decoded = jwt.verify(token, "super-secret-key");
+    const userId = decoded.userId;
+
+    const updatedUser = req.body;
+    const existingUser = await pool.query("SELECT * FROM users WHERE id =$1", [
+      userId,
+    ]);
+    if (existingUser.rows.length === 0) {
+      res.status(404).send("User not found");
+      return;
     }
-    const mergedUser = Object.assign({}, user.rows[0], updatedUser);
-    await pool.query(
+
+    const userToUpdate = existingUser.rows[0];
+    const mergedUser = Object.assign({}, userToUpdate, updatedUser);
+    const result = await pool.query(
       "UPDATE users SET name =$1, date_of_birth =$2, gender =$3, email =$4, trainer =$5, primary_gym =$6 RETURNING *",
       [
         mergedUser.name,
@@ -136,11 +126,15 @@ export const updateUser = async (req, res, next) => {
         mergedUser.primary_gym,
       ]
     );
-    res.setHeader("Content-Type", "application/json").send(mergedUser);
+    res
+      .setHeader("Content-Type", "application/json")
+      .status(202)
+      .send(result.rows[0]);
   } catch (err) {
     next(err);
   }
 };
+
 export const loginRequest = async (req, res, next) => {
   console.log(req.body);
   const { username, password } = req.body;
@@ -158,8 +152,9 @@ export const loginRequest = async (req, res, next) => {
       return res.status(401).send("Invalid username or password");
     }
 
-    const secretKey = "your-secret-key";
-    const token = jwt.sign({ username: user.username }, secretKey);
+    const secretKey = "super-secret-key";
+    const userId = user.rows[0].id;
+    const token = jwt.sign({ userId }, secretKey);
     console.log(token);
     return res.status(202).json({ token, message: "Login Success!" });
   } catch (err) {
@@ -170,3 +165,33 @@ app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).send("Internal server error");
 });
+
+export const passwordRequest = async (req, res, next) => {
+  console.log("hello");
+  const { password } = req.body;
+  console.log(password);
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    res.status(401).send("Invalid token");
+  }
+  const token = authHeader.substring(7);
+  const decoded = jwt.verify(token, "super-secret-key");
+  console.log(decoded);
+  const userId = decoded.userId;
+  try {
+    const user = await pool.query(`SELECT * FROM users WHERE id =$1`, [userId]);
+    if (user.rows.length === 0 || user.rows.length === undefined) {
+      res.status(404).send("Not found");
+      return;
+    }
+
+    const isValid = bcrypt.compareSync(password, user.rows[0].password);
+
+    if (!isValid) {
+      return res.status(401).send("Invalid username or password");
+    }
+    return res.status(202).json({ message: "Success!" });
+  } catch (err) {
+    next(err);
+  }
+};

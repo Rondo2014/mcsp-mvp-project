@@ -4,7 +4,11 @@ import jwt from "jsonwebtoken";
 const saltRounds = 10;
 
 export const hashPasswordMiddleware = (req, res, next) => {
-  if (req.body.password && req.originalUrl !== "/users/login") {
+  if (
+    req.body.password &&
+    req.originalUrl !== "/users/login" &&
+    req.originalUrl !== "/users/password"
+  ) {
     bcrypt.hash(req.body.password, saltRounds, (err, hashedPassword) => {
       if (err) {
         return res.status(500).json({ err: "Error hashing password" });

@@ -43,7 +43,7 @@
             <li><a href="index.html">Home</a></li>
             <li><a href="locations">Locations</a></li>
             <li><a href="trainers">Trainers</a></li>
-            <li><a href="profile">Profile</a></li>
+            <li><p class="profile">Profile</p></li>
           </ul>
           <a href="#" class="action_btn" id="signin_signup">Login/Signup</a>
           <div class="toggle_btn">
@@ -55,7 +55,7 @@
           <li><a href="index.html">Home</a></li>
           <li><a href="locations">Locations</a></li>
           <li><a href="trainers">Trainers</a></li>
-          <li><a href="profile">Profile</a></li>
+          <li><p class="profile">Profile</p></li>
           <li>
             <a href="#" class="action_btn" id="signin_signup_D">Login/Signup</a>
           </li>
@@ -130,6 +130,158 @@
             </span>
           </li>
         </ul>
+      </div>
+      <div id="profile" class="profile-container hidden">
+        <div class="avatar">
+          <img
+            src="https://us.123rf.com/450wm/tanyadanuta/tanyadanuta1910/tanyadanuta191000003/148019275-hand-drawn-modern-man-avatar-profile-icon-or-portrait-icon-user-flat-avatar-icon-sign-profile.jpg?ver=6"
+            alt=""
+          />
+        </div>
+        <div class="profile-content">
+          <button
+            id="profile-edit-button"
+            type="button"
+            class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent edit-button"
+          >
+            edit
+          </button>
+          <form class="profile-details">
+            <div
+              class="detail mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+            >
+              <label
+                id="profile-name"
+                class="mdl-textfield__label"
+                for="sample1"
+                >Name:</label
+              >
+              <input
+                id="profile-name-input"
+                type="text"
+                class="profile-input mdl-textfield__input"
+                disabled
+              />
+            </div>
+            <div
+              class="detail mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+            >
+              <label
+                id="profile-email"
+                class="mdl-textfield__label"
+                for="sample1"
+                >Email:</label
+              >
+              <input
+                id="profile-email-input"
+                type="text"
+                class="profile-input mdl-textfield__input"
+                disabled
+              />
+            </div>
+            <div
+              class="detail mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+            >
+              <label
+                id="profile-username"
+                class="mdl-textfield__label"
+                for="sample1"
+                >Username:</label
+              >
+              <input
+                id="profile-username-input"
+                type="text"
+                class="profile-input mdl-textfield__input"
+                disabled
+              />
+            </div>
+            <div
+              class="detail mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+            >
+              <label
+                id="profile-password"
+                class="mdl-textfield__label"
+                for="sample1"
+                >Password:</label
+              >
+              <input
+                id="profile-password-input"
+                type="password"
+                class="profile-input mdl-textfield__input"
+                disabled
+              />
+            </div>
+            <div
+              class="detail mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+            >
+              <label
+                id="profile-gender"
+                class="mdl-textfield__label"
+                for="sample1"
+                >gender:</label
+              >
+              <input
+                id="profile-gender-input"
+                type="text"
+                class="profile-input mdl-textfield__input"
+                disabled
+              />
+            </div>
+            <div
+              class="detail mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+            >
+              <label
+                id="profile-date-of-birth"
+                class="mdl-textfield__label"
+                for="sample1"
+                >Date of Birth:</label
+              >
+              <input
+                id="profile-date-of-birth-input"
+                type="text"
+                class="profile-input mdl-textfield__input"
+                disabled
+              />
+            </div>
+            <div
+              class="detail mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+            >
+              <label
+                id="profile-primary-gym"
+                class="mdl-textfield__label"
+                for="sample1"
+                >Primary Gym:</label
+              >
+              <input
+                id="profile-primary-gym-input"
+                type="text"
+                class="profile-input mdl-textfield__input"
+                disabled
+              />
+            </div>
+            <div
+              class="detail mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+            >
+              <label
+                id="profile-trainer"
+                class="mdl-textfield__label"
+                for="sample1"
+                >Trainer: NA</label
+              >
+              <input
+                id="profile-trainer-input"
+                type="text"
+                class="profile-input mdl-textfield__input"
+                disabled
+              />
+            </div>
+          </form>
+        </div>
+        <div class="social">
+          <a href="#" class="social"></a>
+          <a href="#" class="social"></a>
+          <a href="#" class="social"></a>
+        </div>
       </div>
       <div id="popup-container">
         <div class="reg_container">
@@ -284,11 +436,14 @@
               >
                 <input
                   class="mdl-textfield__input"
-                  type="text"
-                  id="password_login"
+                  type="password"
+                  id="signInPasswordField"
                   name="password"
                   required
                 />
+                <i id="signInPasswordEye" class="material-icons password-eye"
+                  >visibility</i
+                >
                 <label class="mdl-textfield__label" for="sample1"
                   >password...</label
                 >
@@ -328,6 +483,38 @@
         <div class="mdl-dialog__actions">
           <button type="button" class="mdl-button sign-in-close">close</button>
           <!-- <button type="button" class="mdl-button close">Disagree</button> -->
+        </div>
+      </dialog>
+      <dialog class="mdl-dialog edit-button-dialog">
+        <h4 class="mdl-dialog__title">Please re-enter your password</h4>
+        <div
+          class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+        >
+          <input
+            class="mdl-textfield__input"
+            type="password"
+            id="editPasswordField"
+            name="password"
+            required
+          />
+          <i id="editPasswordEye" class="material-icons password-eye"
+            >visibility</i
+          >
+          <label class="mdl-textfield__label" for="sample1">password...</label>
+        </div>
+        <button
+          class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent edit-password-button"
+        >
+          Submit
+        </button>
+      </dialog>
+      <dialog class="mdl-dialog profile-save-dialog">
+        <h4 class="mdl-dialog__title">Profile Updated!</h4>
+        <div class="mdl-dialog__content"></div>
+        <div class="mdl-dialog__actions">
+          <button type="button" class="mdl-button profile-save-close">
+            close
+          </button>
         </div>
       </dialog>
     </div>

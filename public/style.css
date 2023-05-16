@@ -13,6 +13,7 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
   background-color: black;
+  overflow-y: auto;
 }
 li {
   list-style: none;
@@ -25,12 +26,66 @@ a {
 a:hover {
   color: rgb(46, 24, 46) !important;
 }
+.avatar img {
+  border-radius: 50%;
+  width: 140px;
+  height: 140px;
+  margin-top: 5%;
+  object-fit: cover;
+  object-position: 0 -8px;
+}
+.profile {
+  text-decoration: none;
+  color: white !important;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.profile:hover {
+  color: rgb(46, 24, 46) !important;
+}
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #100e0e9c;
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  color: whitesmoke;
+  border: 1px solid rgb(87, 15, 87);
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 750px;
+  justify-content: flex-start;
+  right: 30%;
+  overflow-y: auto;
+}
+.profile-content {
+  display: flex;
+  grid-template-columns: 1fr 1fr;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.profile-details {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 2px;
+}
+.edit-button {
+  width: 30px !important;
+  margin-top: 5px;
+}
 /* HEADER */
 header {
   position: relative;
   padding: 0 2rem;
 }
-
 .navbar {
   width: 100%;
   height: 100px;
@@ -137,6 +192,10 @@ header {
   scale: 1.05;
   background-color: grey;
 }
+.mdl-radio__label {
+  color: rgb(170, 170, 170) !important;
+  margin-right: 2px !important;
+}
 
 .mdl-list {
   margin-top: 30px;
@@ -146,6 +205,8 @@ header {
   max-width: 600px;
   background-color: rgba(0, 0, 0, 0.39);
   backdrop-filter: blur(15px);
+  border: 1px solid rgb(125, 24, 125);
+  border-radius: 15px !important;
 }
 
 .mdl-card {
@@ -154,6 +215,9 @@ header {
   width: 45%;
   background-color: rgba(0, 0, 0, 0.577) !important;
   backdrop-filter: blur(15px);
+  z-index: -1 !important;
+  border: 1px solid rgb(125, 24, 125);
+  border-radius: 15px !important;
 }
 .mdl-card h2 {
   color: rgb(125, 24, 125);
@@ -207,8 +271,8 @@ footer {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(65, 63, 63, 0.384);
-  backdrop-filter: blur(10px);
+  /* background-color: rgba(12, 11, 11, 0.599); */
+  /* backdrop-filter: blur(10px); */
   display: none;
   justify-content: center;
   align-items: center;
@@ -221,15 +285,17 @@ footer {
   top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #3a3a3a49;
+  background-color: #100e0e9c;
+  backdrop-filter: blur(10px);
   border-radius: 10px;
   border: 1px solid rgb(87, 15, 87);
   padding: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   width: 100%;
-  max-width: 650px;
+  max-width: 750px;
   justify-content: flex-start;
   right: 30%;
+  overflow-y: auto;
 }
 .forms-container {
   display: flex;
@@ -249,6 +315,7 @@ footer {
 }
 .gender-container {
   justify-content: center;
+  padding: 2px;
 }
 .mdl-textfield {
   color: #948d8d;
@@ -263,11 +330,22 @@ footer {
   cursor: pointer;
   color: lightgray;
 }
-@media (max-width: 576px) {
+.password-eye:hover {
+  scale: 1.05;
+  color: rgb(125, 24, 125);
+}
+::-webkit-scrollbar {
+  background-color: #100e0e9c;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgb(125, 24, 125);
+}
+@media (max-width: 800px) {
   .reg_container {
     top: 50%;
     transform: translate(-50%, -50%);
     width: 90%;
+    max-height: 70vh;
   }
 
   .forms-container {
