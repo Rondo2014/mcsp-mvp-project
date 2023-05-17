@@ -304,8 +304,9 @@ profile.onclick = async () => {
         primary_gym,
       } = res.data;
 
-      const resGyms = await axios.get(`${locationsUrl}/${primary_gym}`);
-
+      if (primary_gym !== null) {
+        const resGyms = await axios.get(`${locationsUrl}/${primary_gym}`);
+      }
       const formattedDateOfBirth = new Date(date_of_birth)
         .toISOString()
         .split("T")[0];
