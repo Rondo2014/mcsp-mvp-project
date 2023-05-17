@@ -25,8 +25,9 @@ export const getAllUsers = async (req, res, next) => {
 };
 
 export const createUser = async (req, res, next) => {
-  const { fullName, email, dateOfBirth, username, password, gender } = req.body;
-  const formattedDate = moment(dateOfBirth).format("YYYY-MM-DD");
+  const { fullName, email, username, password, gender } = req.body;
+  const dateOfBirth = req.body["date-of-birth"];
+  // const formattedDate = moment(dateOfBirth).format("YYYY-MM-DD");
   const existingUser = await pool.query(
     "SELECT * FROM users WHERE username =$1 OR email =$2",
     [username, email]
@@ -39,7 +40,7 @@ export const createUser = async (req, res, next) => {
     const result = await pool.query(
       `INSERT INTO users (name, email, username, password, date_of_birth, gender) 
        VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-      [fullName, email, username, password, formattedDate, gender]
+      [fullName, email, username, password, dateOfBirth, gender]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -55,9 +56,8 @@ export const getUser = async (req, res, next) => {
   const token = authHeader.substring(7);
   try {
     const decoded = jwt.verify(token, "super-secret-key");
-    console.log(decoded);
+
     const userId = decoded.userId;
-    console.log(userId);
 
     const user = await pool.query(`SELECT * FROM users WHERE id =$1`, [userId]);
     if (user.rows.length === 0 || user.rows.length === undefined) {
@@ -79,9 +79,8 @@ export const deleteUser = async (req, res, next) => {
   const token = authHeader.substring(7);
   try {
     const decoded = jwt.verify(token, "super-secret-key");
-    console.log(decoded);
+
     const userId = decoded.userId;
-    console.log(userId);
     const user = await pool.query(
       "DELETE FROM users WHERE id =$1 RETURNING *",
       [userId]
@@ -108,6 +107,7 @@ export const updateUser = async (req, res, next) => {
     const userId = decoded.userId;
 
     const updatedUser = req.body;
+    const primary_gym = Number(req.body["primary-gym"]);
     const existingUser = await pool.query("SELECT * FROM users WHERE id =$1", [
       userId,
     ]);
@@ -126,7 +126,7 @@ export const updateUser = async (req, res, next) => {
         mergedUser.gender,
         mergedUser.email,
         mergedUser.trainer,
-        mergedUser.primary_gym,
+        primary_gym,
         userId,
       ]
     );
@@ -140,7 +140,6 @@ export const updateUser = async (req, res, next) => {
 };
 
 export const loginRequest = async (req, res, next) => {
-  console.log(req.body);
   const { username, password } = req.body;
   try {
     const user = await pool.query("SELECT * FROM users WHERE username =$1", [
@@ -159,28 +158,20 @@ export const loginRequest = async (req, res, next) => {
     const secretKey = "super-secret-key";
     const userId = user.rows[0].id;
     const token = jwt.sign({ userId }, secretKey);
-    console.log(token);
     res.status(202).json({ token, message: "Login Success!" });
   } catch (err) {
     next(err);
   }
 };
-app.use((err, req, res, next) => {
-  console.error(err);
-  res.status(500).send("Internal server error");
-});
 
 export const passwordRequest = async (req, res, next) => {
-  console.log("hello");
   const { password } = req.body;
-  console.log(password);
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     res.status(401).send("Invalid token");
   }
   const token = authHeader.substring(7);
   const decoded = jwt.verify(token, "super-secret-key");
-  console.log(decoded);
   const userId = decoded.userId;
   try {
     const user = await pool.query(`SELECT * FROM users WHERE id =$1`, [userId]);
@@ -199,3 +190,8 @@ export const passwordRequest = async (req, res, next) => {
     next(err);
   }
 };
+
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).send("Internal server error");
+});

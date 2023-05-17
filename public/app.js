@@ -17,7 +17,9 @@ const fetchUsersUrl = "/users";
 const getUsersByID = "/users/:id";
 const loginUrl = "/users/login";
 const passwordUrl = "/users/password";
-const deleteUrl = "users/delete";
+const deleteUrl = "/users/delete";
+const locationsUrl = "/locations";
+const locationUrl = "/locations/:id";
 const footer = document.getElementById("footer");
 const signInButton = document.querySelector(".sign-in-button");
 const signInDialog = document.querySelector(".sign-in-dialog");
@@ -33,8 +35,8 @@ const profileEmail = document.getElementById("profile-email");
 const profileUsername = document.getElementById("profile-username");
 const profilePassword = document.getElementById("profile-password");
 const profileGender = document.getElementById("profile-gender");
-const profileDOB = document.getElementById("profile-date-of-birth");
-const profileDOBInput = document.getElementById("profile-date-of-birth-input");
+const profileDOB = document.getElementById("profile-date_of_birth");
+const profileDOBInput = document.getElementById("profile-date_of_birth-input");
 const editButton = document.querySelector(".edit-button");
 const profileGym = document.querySelector(".profile-primary-gym");
 const profileTrainer = document.querySelector(".profile-trainer");
@@ -51,6 +53,8 @@ const deleteButton = document.querySelector(".delete-button");
 const deleteDialog = document.querySelector(".delete-dialog");
 const deleteAgree = document.querySelector(".mdl-delete-button");
 const deleteDisagree = document.querySelector("#delete-disagree-button");
+const profilePrimaryGym = document.getElementById("profile-primary-gym");
+const profilePrimaryGymId = document.getElementById("profile-primary-gym-id");
 
 isLoggedIn();
 console.log(isLoggedIn());
@@ -73,6 +77,7 @@ function updateDOMOnLogin() {
   if (isLoggedIn()) {
     registerButton.textContent = "Logout";
     welcomeCard.classList.add("hidden");
+    getGyms();
   } else {
     registerButton.textContent = "Login/Signup";
   }
@@ -91,6 +96,32 @@ function updateProfile() {
 function handleSignIn() {
   signInDialog.close();
   updateDOMOnLogin();
+}
+function populateGymDropdown(gyms) {
+  const dropdown = document.querySelector("#profile-primary-gym-input");
+  dropdown.innerHTML = "";
+
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.text = "Select Gym";
+  dropdown.appendChild(defaultOption);
+
+  gyms.forEach((gym) => {
+    const option = document.createElement("option");
+    option.value = gym.id;
+    option.text = gym.city;
+    dropdown.appendChild(option);
+  });
+}
+
+async function getGyms() {
+  try {
+    const res = await axios.get(locationsUrl);
+    const gyms = res.data;
+    populateGymDropdown(gyms);
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 //  Navbar toggle
@@ -213,6 +244,7 @@ registerForm.addEventListener("submit", async (e) => {
       if (err.response && err.response.status === 400) {
         alert(err.response.data);
       }
+
       popupContainer.style.display = "block";
       popupContainer.classList.add("visible");
       footer.classList.add("hidden");
@@ -236,7 +268,6 @@ signInForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const formData = new FormData(signInForm);
   const user = Object.fromEntries(formData.entries());
-  console.log(user);
   try {
     const res = await axios.post(loginUrl, user);
     if (res.status === 202) {
@@ -268,11 +299,12 @@ profile.onclick = async () => {
         gender,
         name,
         password,
-        primary_gym,
         trainer,
         username,
+        primary_gym,
       } = res.data;
-      console.log(res.data);
+
+      const resGyms = await axios.get(`${locationsUrl}/${primary_gym}`);
 
       const formattedDateOfBirth = new Date(date_of_birth)
         .toISOString()
@@ -283,9 +315,7 @@ profile.onclick = async () => {
       profilePassword.textContent = `Password: ******`;
       profileDOB.textContent = `D.O.B: ${formattedDateOfBirth}`;
       profileGender.textContent = `Gender: ${gender}`;
-      profileGym.textContent = `Primary Gym: ${
-        primary_gym ? primary_gym : "NA"
-      }`;
+      profilePrimaryGymId.value = primary_gym.toString();
       profileTrainer.textContent = `Trainer: ${trainer ? trainer : "NA"}`;
     } catch (err) {
       console.log(err);
@@ -301,7 +331,6 @@ profile.onclick = async () => {
 
 editButton.onclick = async () => {
   const buttonText = editButton.textContent.trim();
-  console.log(buttonText);
   if (buttonText === "edit") {
     editButtonDialog.showModal();
   } else if (buttonText === "save") {
@@ -313,7 +342,6 @@ editButton.onclick = async () => {
       const inputValue = input.value;
       if (inputValue.trim() !== "") {
         userData[inputId] = inputValue;
-        console.log(userData);
       }
     });
 
@@ -322,7 +350,6 @@ editButton.onclick = async () => {
       const res = await axios.patch(fetchUsersUrl, userData, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      console.log(res.status);
       if (res.status === 202) {
         profileSaveDialog.showModal();
       }

@@ -259,13 +259,13 @@
               class="detail mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
             >
               <label
-                id="profile-date-of-birth"
+                id="profile-date_of_birth"
                 class="mdl-textfield__label"
                 for="sample1"
                 >Date of Birth:</label
               >
               <input
-                id="profile-date-of-birth-input"
+                id="profile-date_of_birth-input"
                 type="text"
                 class="profile-input mdl-textfield__input"
                 disabled
@@ -280,12 +280,14 @@
                 for="sample1"
                 >Primary Gym:</label
               >
-              <input
+              <select
                 id="profile-primary-gym-input"
-                type="text"
                 class="profile-input mdl-textfield__input"
                 disabled
-              />
+              >
+                <option class="profile-primary-gym" value="">Select Gym</option>
+              </select>
+              <input type="hidden" id="profile-primary-gym-id" />
             </div>
             <div
               class="detail mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
@@ -296,12 +298,13 @@
                 for="sample1"
                 >Trainer: NA</label
               >
-              <input
+              <select
                 id="profile-trainer-input"
-                type="text"
                 class="profile-input mdl-textfield__input"
                 disabled
-              />
+              >
+                <option value="">Select Trainer</option>
+              </select>
             </div>
           </form>
         </div>
@@ -395,7 +398,7 @@
                 >
               </div>
               <div class="mdl-textfield mdl-js-textfield date-input">
-                <div class="date-of-birth">Date of Birth</div>
+                <div class="date_of_birth">Date of Birth</div>
                 <label for="date-input"></label>
                 <input
                   id="dateOfBirth"
@@ -412,7 +415,7 @@
                     id="radio1"
                     name="gender"
                     class="mdl-radio__button"
-                    value="F"
+                    value="M"
                   />
                   <span class="mdl-radio__label">Male</span>
                 </label>
