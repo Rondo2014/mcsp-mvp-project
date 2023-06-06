@@ -316,7 +316,7 @@ profile.onclick = async () => {
       profilePassword.textContent = `Password: ******`;
       profileDOB.textContent = `D.O.B: ${formattedDateOfBirth}`;
       profileGender.textContent = `Gender: ${gender}`;
-      profilePrimaryGymId.value = primary_gym.toString();
+      // profilePrimaryGym.textContent = `Primary Gym: ${resGyms.city}`;
       profileTrainer.textContent = `Trainer: ${trainer ? trainer : "NA"}`;
     } catch (err) {
       console.log(err);

@@ -25,8 +25,8 @@ export const getAllUsers = async (req, res, next) => {
 };
 
 export const createUser = async (req, res, next) => {
-  const { fullName, email, username, password, gender } = req.body;
-  const dateOfBirth = req.body["date-of-birth"];
+  const { name, email, username, password, dateOfBirth, gender } = req.body;
+  console.log(req.body);
   // const formattedDate = moment(dateOfBirth).format("YYYY-MM-DD");
   const existingUser = await pool.query(
     "SELECT * FROM users WHERE username =$1 OR email =$2",
@@ -40,7 +40,7 @@ export const createUser = async (req, res, next) => {
     const result = await pool.query(
       `INSERT INTO users (name, email, username, password, date_of_birth, gender) 
        VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-      [fullName, email, username, password, dateOfBirth, gender]
+      [ name, email, username, password, dateOfBirth, gender]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -102,6 +102,7 @@ export const updateUser = async (req, res, next) => {
     return;
   }
   const token = authHeader.substring(7);
+  console.log(req.data);
   try {
     const decoded = jwt.verify(token, "super-secret-key");
     const userId = decoded.userId;
@@ -141,6 +142,7 @@ export const updateUser = async (req, res, next) => {
 
 export const loginRequest = async (req, res, next) => {
   const { username, password } = req.body;
+  console.log(req.body);
   try {
     const user = await pool.query("SELECT * FROM users WHERE username =$1", [
       username,
