@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS locations CASCADE;
 DROP TABLE IF EXISTS trainers CASCADE;
-DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS stored_workouts CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
 
 CREATE TABLE locations(
     id SERIAL NOT NULL PRIMARY KEY,
@@ -16,7 +17,7 @@ CREATE TABLE trainers(
 );
 
 CREATE TABLE users(
-    id SERIAL NOT NULL,
+    id SERIAL NOT NULL PRIMARY KEY,
     name TEXT NOT NULL,
     date_of_birth DATE NOT NULL,
     gender CHAR(2) CHECK (gender IN ('M', 'F', 'NA')),
@@ -27,3 +28,18 @@ CREATE TABLE users(
     primary_gym INTEGER REFERENCES locations(id)
 );
 
+CREATE TABLE stored_workouts(
+    id SERIAL NOT NULL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    name TEXT NOT NULL,
+    workout TEXT[] NOT NULL,
+    type TEXT[] NOT NULL,
+    sets INTEGER[] NOT NULL,
+    reps INTEGER[] NOT NULL,
+    weight INTEGER[] NOT NULL,
+    distance INTEGER[] NOT NULL,
+    time TIME[] NOT NULL,
+    calories INTEGER[] NOT NULL,
+    notes TEXT[] NOT NULL,
+    date DATE[] NOT NULL
+);

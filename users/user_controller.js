@@ -40,7 +40,7 @@ export const createUser = async (req, res, next) => {
     const result = await pool.query(
       `INSERT INTO users (name, email, username, password, date_of_birth, gender) 
        VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-      [ name, email, username, password, dateOfBirth, gender]
+      [name, email, username, password, dateOfBirth, gender]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -188,6 +188,100 @@ export const passwordRequest = async (req, res, next) => {
       return res.status(401).send("Invalid username or password");
     }
     return res.status(202).json({ message: "Success!" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getUserWorkouts = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    res.status(401).send("Invalid token");
+  }
+  const token = authHeader.substring(7);
+  try {
+    const decoded = jwt.verify(token, "super-secret-key");
+
+    const userId = decoded.userId;
+
+    const user = await pool.query(`SELECT * FROM users WHERE id =$1`, [userId]);
+    if (user.rows.length === 0 || user.rows.length === undefined) {
+      res.status(404).send("Not found");
+      return;
+    }
+    const workouts = await pool.query(
+      `SELECT * FROM stored_workouts WHERE user_id =$1`,
+      [userId]
+    );
+    res.setHeader("Content-Type", "application/json").send(workouts.rows);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const postUserWorkout = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    res.status(401).send("Invalid token");
+  }
+  console.log(authHeader);
+  const token = authHeader.substring(7);
+  console.log(token);
+  try {
+    const decoded = jwt.verify(token, "super-secret-key");
+
+    const userId = decoded.userId;
+
+    const user = await pool.query(`SELECT * FROM users WHERE id =$1`, [userId]);
+    if (user.rows.length === 0 || user.rows.length === undefined) {
+      res.status(404).send("Not found");
+      return;
+    }
+
+    const workouts = req.body.slice(1);
+    const name = req.body[0];
+    const workout = [];
+    const type = [];
+    const sets = [];
+    const reps = [];
+    const weight = [];
+    const distance = [];
+    const time = [];
+    const calories = [];
+    const notes = [];
+    const date = [];
+
+    for (const item of workouts) {
+      workout.push(item.workout);
+      type.push(item.type);
+      sets.push(item.sets);
+      reps.push(item.reps);
+      weight.push(item.weight);
+      distance.push(item.distance);
+      time.push(item.time);
+      calories.push(item.calories);
+      notes.push(item.notes);
+      date.push(item.date);
+    }
+
+    const result = await pool.query(
+      `INSERT INTO stored_workouts (user_id, name, workout, type, sets, reps, weight, distance, time, calories, notes, date ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *`,
+      [
+        userId,
+        name,
+        workout,
+        type,
+        sets,
+        reps,
+        weight,
+        distance,
+        time,
+        calories,
+        notes,
+        date,
+      ]
+    );
+    res.setHeader("Content-Type", "application/json").send(result.rows);
   } catch (err) {
     next(err);
   }

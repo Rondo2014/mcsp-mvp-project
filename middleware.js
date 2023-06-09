@@ -13,5 +13,6 @@ app.use("/users", hashPasswordMiddleware, userRouter);
 app.use("/locations", locationRouter);
 app.use("/users/login", userRouter);
 app.use("/users/password", userRouter);
+app.use("/users/workouts", userRouter);
 
 export default app;
