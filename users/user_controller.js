@@ -54,6 +54,7 @@ export const getUser = async (req, res, next) => {
     res.status(401).send("Invalid token");
   }
   const token = authHeader.substring(7);
+
   try {
     const decoded = jwt.verify(token, "super-secret-key");
 
@@ -66,7 +67,7 @@ export const getUser = async (req, res, next) => {
     }
     res.setHeader("Content-Type", "application/json").send(user.rows[0]);
   } catch (err) {
-    res.status(401).send("Invalid token");
+    res.status(401).send("Server error");
     next(err);
   }
 };
@@ -148,13 +149,13 @@ export const loginRequest = async (req, res, next) => {
       username,
     ]);
     if (user.rows.length === 0) {
-      res.status(401).send("Invalid username or password");
+      res.status(401).send("Invalid username");
     }
 
     const isValid = bcrypt.compareSync(password, user.rows[0].password);
 
     if (!isValid) {
-      res.status(401).send("Invalid username or password");
+      res.status(401).send("Invalid password");
     }
 
     const secretKey = "super-secret-key";
